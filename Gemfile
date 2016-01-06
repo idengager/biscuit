@@ -13,3 +13,5 @@ group :development do
   gem 'web-console', '~> 2.0'
   gem 'spring'
 end
+
+ruby "2.3.0"
