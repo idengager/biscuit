@@ -3,7 +3,7 @@ class PostsController < ApplicationController
     if params["token"] == Rails.application.secrets.slack_token
       render json: response_hash
     else
-      render nothing: true
+      render json: { text: "Slack token is invalid :(" }
     end
   end
 

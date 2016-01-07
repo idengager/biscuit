@@ -50,8 +50,9 @@ describe PostsController do
 
     it "renders nothing" do
       get :latest_post_url, token: "1234"
-      expect(response.content_type).to eq("text/plain")
-      expect(response.body).to be_empty
+      expect(response.content_type).to eq("application/json")
+      response_hash = JSON.parse(response.body)
+      expect(response_hash).to have_value("Slack token is invalid :(")
     end
   end
 
