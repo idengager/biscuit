@@ -4,6 +4,8 @@ gem 'rails', '4.2.5'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+gem 'koala', '~> 2.2'
+
 group :development, :test do
   gem 'byebug'
   gem 'rspec-rails', '~> 3.0'

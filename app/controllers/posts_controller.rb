@@ -9,16 +9,33 @@ class PostsController < ApplicationController
 
   private
 
+  def access_token
+    oauth = Koala::Facebook::OAuth.new(
+      Rails.application.secrets.facebook_key,
+      Rails.application.secrets.facebook_secret
+    )
+    oauth.get_app_access_token
+  end
+
+  def latest_post_from_facebook
+    client = Koala::Facebook::API.new(access_token)
+    client.get_connection(
+      'psiesucharki',
+      'posts',
+      { limit: 1, fields: ['full_picture'] }
+    )
+  end
+
   def response_hash
-    url = "https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-xpf1/v/t1.0-9/s720x720/12400685_1025642710821896_3357628243610338772_n.jpg?oh=d3689d87c2452478f3c4e8830c99f4a9&oe=57488E66&__gda__=1464322765_143a29a1a789a4c1122739df31bddb55"
+    image_url = latest_post_from_facebook.first['full_picture']
     response_hash = {
       response_type: "in_channel",
       unfurl_media: true,
       attachments: [
         {
-          fallback: "Psie Sucharki FTW – #{url}",
+          fallback: "Psie Sucharki FTW – #{image_url}",
           title: "Psie Sucharki FTW",
-          image_url: url
+          image_url: image_url
         }
       ]
     }
