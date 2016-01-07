@@ -10,11 +10,9 @@ class PostsController < ApplicationController
   private
 
   def access_token
-    oauth = Koala::Facebook::OAuth.new(
-      Rails.application.secrets.facebook_key,
-      Rails.application.secrets.facebook_secret
-    )
-    oauth.get_app_access_token
+    # this is a (documented) way of authenticating your app without actually
+    # fetching an access token from Facebook
+    "#{Rails.application.secrets.facebook_key}|#{Rails.application.secrets.facebook_secret}"
   end
 
   def latest_post_from_facebook
