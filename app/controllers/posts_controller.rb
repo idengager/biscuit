@@ -12,7 +12,7 @@ class PostsController < ApplicationController
   def access_token
     # this is a (documented) way of authenticating your app without actually
     # fetching an access token from Facebook
-    "#{Rails.application.secrets.facebook_key}|#{Rails.application.secrets.facebook_secret}"
+    "#{Rails.application.secrets.facebook_id}|#{Rails.application.secrets.facebook_secret}"
   end
 
   def image_url
