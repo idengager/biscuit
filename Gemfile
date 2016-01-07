@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.5'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'webmock', group: :test
 
 gem 'koala', '~> 2.2'
 

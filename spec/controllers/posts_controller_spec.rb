@@ -1,7 +1,27 @@
 require "rails_helper"
 
 describe PostsController do
+  def facebook_response
+    {
+     "data": [
+        {
+           "full_picture": "https://fbcdn-sphotos-a-a.akamaihd.net/hphotos-ak-xla1/v/t1.0-9/s720x720/12512611_1026668354052665_5369779569253905988_n.jpg?oh=d1dbb82c02b0666cdd790bf58486f1d2&oe=5712BB14&__gda__=1464276150_09ab56661dd0da3a80226c7b23bbba40",
+           "id": "808519212534248_1026668354052665"
+        }
+      ]
+    }
+  end
+
   context "when slack token is valid" do
+    before do
+      stub_request(
+        :get,
+        "https://graph.facebook.com/psiesucharki/posts?" \
+        "access_token=1047755528610055%7C091fd9388223a226d5951a309690f10f&" \
+        "fields=full_picture&limit=1"
+      ).to_return(status: 200, body: facebook_response.to_json)
+    end
+
     it "responds with HTTP 200" do
       get :latest_post_url, token: Rails.application.secrets.slack_token
       expect(response).to be_ok
@@ -36,6 +56,15 @@ describe PostsController do
   end
 
   context "when facebook authorisation doesn't succeed" do
+    before do
+      stub_request(
+        :get,
+        "https://graph.facebook.com/psiesucharki/posts?" \
+        "access_token=&" \
+        "fields=full_picture&limit=1"
+      ).to_return(status: 401)
+    end
+
     it "responds with HTTP 200" do
       allow_any_instance_of(PostsController).to receive(:access_token).and_return("")
       get :latest_post_url, token: Rails.application.secrets.slack_token
