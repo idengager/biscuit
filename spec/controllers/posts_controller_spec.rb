@@ -34,4 +34,19 @@ describe PostsController do
       expect(response.body).to be_empty
     end
   end
+
+  context "when facebook authorisation doesn't succeed" do
+    it "responds with HTTP 200" do
+      allow_any_instance_of(PostsController).to receive(:access_token).and_return("")
+      get :latest_post_url, token: Rails.application.secrets.slack_token
+      expect(response).to be_ok
+    end
+
+    it "renders error message" do
+      allow_any_instance_of(PostsController).to receive(:access_token).and_return("")
+      get :latest_post_url, token: Rails.application.secrets.slack_token
+      response_hash = JSON.parse(response.body)
+      expect(response_hash).to have_value("Cannot connect to Facebook :(")
+    end
+  end
 end

@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   def latest_post_url
-    if params['token'] == Rails.application.secrets.slack_token
+    if params["token"] == Rails.application.secrets.slack_token
       render json: response_hash
     else
       render nothing: true
@@ -15,18 +15,22 @@ class PostsController < ApplicationController
     "#{Rails.application.secrets.facebook_key}|#{Rails.application.secrets.facebook_secret}"
   end
 
-  def latest_post_from_facebook
+  def image_url
     client = Koala::Facebook::API.new(access_token)
-    client.get_connection(
-      'psiesucharki',
-      'posts',
-      { limit: 1, fields: ['full_picture'] }
-    )
+    begin
+      client.get_connection(
+        "psiesucharki",
+        "posts",
+        { limit: 1, fields: ["full_picture"] }
+        ).first["full_picture"]
+    rescue Koala::Facebook::ClientError
+      ""
+    end
   end
 
   def response_hash
-    image_url = latest_post_from_facebook.first['full_picture']
-    response_hash = {
+    return { text: "Cannot connect to Facebook :(" } if image_url.empty?
+    {
       response_type: "in_channel",
       unfurl_media: true,
       attachments: [
